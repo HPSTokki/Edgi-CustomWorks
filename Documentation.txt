@@ -44,3 +44,13 @@ OPTIONAL TO PERO MAS MAGANDA IF GANTO GAGAWIN NYO
 5.) After madelete, sbihn ule sa GC, everyone do 1.2) and 1.3)
 
 
+### POST CLEANUP, AKIN TO ###
+
+6) git checkout main
+6.1) git fetch origin
+6.2) git reset --hard origin/main
+
+7.) git branch -d nameBranch/nameBranch
+7.1) git branch -D nameBranch/nameBranch
+
+
