@@ -5,5 +5,6 @@ export const account = pgTable("account", {
     email: varchar("email", { length: 150}).notNull().unique(),
     password: text("password").notNull(),
     role: integer("role").notNull(),
-    createdAt: date("created_at").notNull()
-})
+    createdAt: date("created_at").notNull().defaultNow(),
+    updatedAt: date("updated_at").notNull().defaultNow()
+});
