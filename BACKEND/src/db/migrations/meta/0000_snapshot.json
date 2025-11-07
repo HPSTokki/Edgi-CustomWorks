@@ -1,9 +1,305 @@
 {
-  "id": "c30b3262-c508-4189-a20c-b7b1f87a24bb",
+  "id": "d34166b8-5a17-42d7-a867-7f26fb6f3a23",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.barrel_material_pricing": {
+      "name": "barrel_material_pricing",
+      "schema": "",
+      "columns": {
+        "barrel_material_pricing_id": {
+          "name": "barrel_material_pricing_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "material_type": {
+          "name": "material_type",
+          "type": "barrel_material_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(100, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_available": {
+          "name": "is_available",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "barrel_material_pricing_material_type_unique": {
+          "name": "barrel_material_pricing_material_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "material_type"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.engraving_pricing": {
+      "name": "engraving_pricing",
+      "schema": "",
+      "columns": {
+        "engraving_pricing_id": {
+          "name": "engraving_pricing_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "engraving_type": {
+          "name": "engraving_type",
+          "type": "engraving_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(100, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_available": {
+          "name": "is_available",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "engraving_pricing_engraving_type_unique": {
+          "name": "engraving_pricing_engraving_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "engraving_type"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.product": {
+      "name": "product",
+      "schema": "",
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(250)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(250)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "short_description": {
+          "name": "short_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "product_category_id_category_category_id_fk": {
+          "name": "product_category_id_category_category_id_fk",
+          "tableFrom": "product",
+          "tableTo": "category",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "category_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "product_slug_unique": {
+          "name": "product_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.barrel": {
+      "name": "barrel",
+      "schema": "",
+      "columns": {
+        "barrel_id": {
+          "name": "barrel_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "min_length_mm": {
+          "name": "min_length_mm",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_length_mm": {
+          "name": "max_length_mm",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "default_length_mm": {
+          "name": "default_length_mm",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "barrel_product_id_product_product_id_fk": {
+          "name": "barrel_product_id_product_product_id_fk",
+          "tableFrom": "barrel",
+          "tableTo": "product",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "product_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.category": {
+      "name": "category",
+      "schema": "",
+      "columns": {
+        "category_id": {
+          "name": "category_id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "create_at": {
+          "name": "create_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "update_at": {
+          "name": "update_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "category_slug_unique": {
+          "name": "category_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.account": {
       "name": "account",
       "schema": "",
@@ -36,7 +332,15 @@
           "name": "created_at",
           "type": "date",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -75,19 +379,63 @@
           "name": "first_name",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "last_name": {
           "name": "last_name",
           "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "age": {
           "name": "age",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "street": {
+          "name": "street",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "province": {
+          "name": "province",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "zip_code": {
+          "name": "zip_code",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -119,9 +467,84 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.color_finish_pricing": {
+      "name": "color_finish_pricing",
+      "schema": "",
+      "columns": {
+        "color_finish_pricing_id": {
+          "name": "color_finish_pricing_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "finish": {
+          "name": "finish",
+          "type": "color_finish",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(100, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_available": {
+          "name": "is_available",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "color_finish_pricing_finish_unique": {
+          "name": "color_finish_pricing_finish_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "finish"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.barrel_material_type": {
+      "name": "barrel_material_type",
+      "schema": "public",
+      "values": [
+        "Aluminum",
+        "Steel",
+        "Carbon Fiber"
+      ]
+    },
+    "public.color_finish": {
+      "name": "color_finish",
+      "schema": "public",
+      "values": [
+        "Gold",
+        "Rainbow",
+        "Silver"
+      ]
+    },
+    "public.engraving_type": {
+      "name": "engraving_type",
+      "schema": "public",
+      "values": [
+        "text_only",
+        "logo_only",
+        "text_and_logo"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},
