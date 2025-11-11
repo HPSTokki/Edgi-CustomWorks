@@ -2,8 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
+    "dev": "nodemon --watch",
     "db:generate": "npx drizzle-kit generate --config=./src/drizzle.config.ts",
     "db:migrate": "npx drizzle-kit migrate --config=./src/drizzle.config.ts"
   },

@@ -1,0 +1,17 @@
+/project-root
+├── /src
+│   ├── /controllers       # Handles incoming requests, communicates with services/models
+│   ├── /models           # Schema definitions, ORM models, database logic
+│   ├── /routes           # Route definitions, mapping endpoints to controllers
+│   ├── /services         # Business logic, helpers, third-party integrations
+│   ├── /middlewares      # Custom middlewares for error handling, auth, logging, etc.
+│   ├── /config           # Configuration files (DB, environment variables, etc.)
+│   ├── /utils            # Utility functions, helpers that are used across the app
+│   └── /migrations       # Database migration scripts (if using ORM)
+│
+├── /tests                # Unit and integration tests
+├── /node_modules         # Dependencies
+├── .env                  # Environment variables
+├── .gitignore            # Git ignore file
+├── package.json          # Project dependencies and scripts
+└── server.ts             # The entry point for your Express server

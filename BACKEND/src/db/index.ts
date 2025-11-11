@@ -5,8 +5,8 @@ export { engravingType as EngravingType } from "./schema/parts_design/engraving_
 
 // User Account and Profile Exports
 
-export { account as UserAccount } from "./schema/accounts.ts";
-export { user as UserProfile } from "./schema/users.ts";
+export { account as UserAccount } from "./schema/user_management/accounts.ts";
+export { user as UserProfile } from "./schema/user_management/users.ts";
 
 //  Product and Category Exports
 
@@ -15,7 +15,9 @@ export { category as ProductCategory} from "./schema/categories.ts";
 
 // Individual Product Variants Export
 
-export { barrel as ProductBarrel} from "./schema/barrels.ts";
+export { barrel as ProductBarrel} from "./schema/parts/barrels.ts";
+export { barrelLengthPricing as ProductBarrelLengthPricing } from "./schema/parts/barrel_length_pricing.ts";
+export { silencer as ProductSilencer } from "./schema/parts/silencers.ts";
 
 // Parts Design Exports
 
