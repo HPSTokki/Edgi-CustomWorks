@@ -9,5 +9,5 @@ export default defineConfig({
         url: process.env.DB_URL as string
     },
     verbose: true,
-    strict: true
+    strict: true,
 })

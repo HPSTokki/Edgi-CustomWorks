@@ -1,0 +1,48 @@
+### Base Url
+
+@baseUrl = "http://localhost:3000/api"
+
+###
+GET http://localhost:3000/api/products
+
+###
+GET http://localhost:3000/api/products?category=suppressors&search=Gated Suppressor
+
+###
+GET http://localhost:3000/api/products/aluminum-outer-barrel
+
+### SIGN UP ###
+
+### 
+POST http://localhost:3000/api/auth/signup
+Content-Type: application/json
+
+{
+    "email": "testmail@gmail.com",
+    "password": "TestPassword123",
+    "role": 0
+}
+
+###
+# @name login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "testmail@gmail.com",
+    "password": "TestPassword123"
+}
+
+###
+@authToken = {{login.response.body.token}}
+
+### Test Token Verify
+POST http://localhost:3000/api/auth/token-verify
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Protected Route Example
+
+POST http://localhost:3000/api/auth/protected-route
+Authorization: Bearer {{authToken}}
+Content-Type: application/json

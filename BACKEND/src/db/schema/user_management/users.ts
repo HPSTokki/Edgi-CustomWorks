@@ -2,10 +2,10 @@ import { pgTable, serial, varchar, text, integer, date } from "drizzle-orm/pg-co
 import { account } from "./accounts.ts"
 
 export const user = pgTable("user", {
-    userID: serial("user_id").primaryKey(),
+    id: serial("user_id").primaryKey(),
     accountID: integer("account_id")
         .notNull()
-        .references(() => account.accountID)
+        .references(() => account.id)
         .unique(),
     firstName: varchar("first_name", { length: 100}),
     lastName: varchar("last_name", { length: 100}),

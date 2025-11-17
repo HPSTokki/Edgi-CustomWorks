@@ -1,22 +1,19 @@
 import express from "express";
-import type { Request, Response } from "express";
-import { db } from "./db.ts";
 import 'dotenv/config';
 import morgan from "morgan";
+import routes from "./routes/index.ts";
+import { authenticateToken as authMiddleware } from "./middleware/authMiddleware.ts";
 
 const app = express();
-const PORT: string = process.env.EXPRESS_PORT as string
+
 
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(express.urlencoded({ extended: true }));
 
-
-app.listen( PORT, () => {
-    console.log(`Listening to port http://localhost:${PORT}`)
-}).on("error", (err: Error) => {
-    console.error("Failed to start server:", err);
+app.use("/api", routes);
+app.get('/hello', (req, res) => {
+    res.send('Hello, World!');
 });
 
-app.get("/Hello", (req: Request, res: Response) => {
-    res.send("Hello, World!");
-})
+export default app;
