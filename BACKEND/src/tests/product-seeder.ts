@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'http://localhost:3000';
+const PIC_URL = `${BASE_URL}/products/`;
 
 interface Product {
     categorySlug: string;
@@ -42,7 +43,7 @@ const products: Product[] = [
         hasBarrelMaterialType: true,
         hasBarrelLength: true,
         images: [
-            '../products/barrel/aluminum_outer_barrel.jpg',
+            `${PIC_URL}barrel/aluminum_outer_barrel.jpg`,
         ],
         minBarrelLength: 80,
         maxBarrelLength: 150,
@@ -87,7 +88,7 @@ const products: Product[] = [
         hasBarrelMaterialType: true,
         hasBarrelLength: true,
         images: [
-            '../products/barrel/carbon_outer_barrel_and_suppressor.png',
+            `${PIC_URL}barrel/carbon_outer_barrel_and_suppressor.png`,
         ],
         minBarrelLength: 80,
         maxBarrelLength: 150,
@@ -132,7 +133,7 @@ const products: Product[] = [
         hasBarrelMaterialType: true,
         hasBarrelLength: true,
         images: [
-            '../products/barrel/carbon_outer_barrel.jpg',
+            `${PIC_URL}barrel/carbon_outer_barrel.jpg`,
         ],
         barrelLengthPricing: [
             { minLengthMm: 85, maxLengthMm: 150, price: 1200.00 },
@@ -175,7 +176,7 @@ const products: Product[] = [
         hasBarrelMaterialType: false,
         hasBarrelLength: false,
         images: [
-            '../products/suppressors/aluminum_suppressor.jpg',
+            `${PIC_URL}suppressors/aluminum_suppressor.jpg`,
         ],
     },
     {
@@ -192,7 +193,7 @@ const products: Product[] = [
         hasBarrelMaterialType: false,
         hasBarrelLength: false,
         images: [
-            '../products/suppressors/carbon_suppressor.jpg',
+            `${PIC_URL}suppressors/carbon_suppressor.jpg`,
         ],
     },
     {
@@ -209,7 +210,7 @@ const products: Product[] = [
         hasBarrelMaterialType: false,
         hasBarrelLength: false,
         images: [
-            '../products/suppressors/gated_suppressor.jpg',
+            `${PIC_URL}suppressors/gated_suppressor.jpg`,
         ],
     }
 ];

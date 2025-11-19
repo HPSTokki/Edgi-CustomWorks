@@ -11,6 +11,13 @@ GET http://localhost:3000/api/products?category=suppressors&search=Gated Suppres
 ###
 GET http://localhost:3000/api/products/aluminum-outer-barrel
 
+###
+
+GET http://localhost:3000/debug-paths
+
+###
+GET http://localhost:3000/api/products/debug-image
+
 ### SIGN UP ###
 
 ### 
