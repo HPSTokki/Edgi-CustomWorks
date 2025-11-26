@@ -1,0 +1,1 @@
+<h1 class="text-9xl text-zinc-900">FAGGOT NOT ALLOWED</h1>

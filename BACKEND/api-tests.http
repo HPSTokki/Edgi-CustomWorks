@@ -36,7 +36,7 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "testmail@gmail.com",
+    "email": "admin@gmail.com",
     "password": "TestPassword123"
 }
 
@@ -51,5 +51,11 @@ Content-Type: application/json
 ### Protected Route Example
 
 POST http://localhost:3000/api/auth/protected-route
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+### Admin Only Route
+
+POST http://localhost:3000/api/auth/admin-only
 Authorization: Bearer {{authToken}}
 Content-Type: application/json

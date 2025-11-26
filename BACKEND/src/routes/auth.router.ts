@@ -29,36 +29,39 @@ router.post('/signup', async (req: Request, res: Response) => {
 })
 
 router.post('/login', async (req: Request, res: Response) => {
+  try {
+    const { email, password, role } = req.body;
+    const result = await AuthService.logIn({
+      email,
+      password,
+      role,
+    })
 
-    try {
-        const { email, password } = req.body;
-        const result = await AuthService.logIn({
-            email,
-            password,
-            role : 0,
-        })
-
-        if (!result.loginData) {
-            return res.status(401).json({ message: 'Invalid Email or Password'})
-        }
-
-        const { password: _, ...userWithoutPassword } = result.loginData;
-
-        res.cookie('token', result.token, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 1000
-        })
-
-        res.json({
-            user: userWithoutPassword,
-            token: result.token,
-            expiresIn: '1h'
-        })
-    } catch (error: any) {
-        console.error('Error during login:', error);
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    if (!result.loginData) {
+      return res.status(401).json({ message: 'Invalid Email or Password'})
     }
-    
+
+    const { password: _, ...userWithoutPassword } = result.loginData;
+
+    res.cookie('token', result.token, {
+      httpOnly: true,
+      maxAge: 60 * 1000, // 1 minute
+      secure: process.env.NODE_ENV === 'production', // Add this
+      sameSite: 'lax', // Add this
+      path: '/', // Add this
+    })
+
+    res.json({
+      id: userWithoutPassword.id,
+      email: userWithoutPassword.email,
+      role: userWithoutPassword.role,
+      token: result.token,
+      expiresIn: '1min'
+    })
+  } catch (error: any) {
+    console.error('Error during login:', error);
+    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  }
 })
 
 router.post('/token-verify', async (req: Request, res: Response) => {
@@ -122,7 +125,7 @@ router.post('/protected-route', async (req: Request, res: Response) => {
 
 router.post('/admin-only', async (req: Request, res: Response) => {
 
-    const token = req.cookies.token || req.headers['authorization']?.replace('Bearer', '') || req.body?.token;
+    const token = req.cookies?.token || req.headers['authorization']?.replace('Bearer ', '') || req.body?.token;
 
     if(!token) {
         return res.status(401).json({ message: 'No token provided' });

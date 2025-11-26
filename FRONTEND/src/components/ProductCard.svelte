@@ -8,14 +8,13 @@ function formatPrice(price: number): string {
     return `${price.toFixed(2)}`;
 }
 
-console.log(product);
-
 </script>
 
 <div class="relative w-full h-full max-w-sm overflow-hidden rounded-xl bg-white dark:bg-[#333] shadow-lg">
     <div class="w-full bg-center bg-no-repeat aspect-square bg-cover" 
          data-alt={product.name} 
          style="background-image: url('{product.images[0]}');">
+         <input type="hidden" value={product.productId}/>
     </div>
     <div class="flex w-full flex-col items-stretch justify-center gap-1 p-2">
         <h3 class="text-xl font-bold leading-tight text text-[#333] dark:text-[#f2f2f2]">
@@ -33,7 +32,7 @@ console.log(product);
             &#8369;{product.basePrice ? formatPrice(product.basePrice) : "Contact for Price"}
         </p>
     </div>
-    <button class="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-md transition-transform hover:scale-105 active:scale-95">
+    <button class="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500 text-white shadow-md transition-transform hover:scale-105 active:scale-95">
         <span class="material-symbols-outlined">add_shopping_cart</span>    
     </button>
     

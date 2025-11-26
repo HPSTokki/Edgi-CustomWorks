@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-@import '@splidejs/svelte-splide/css';
 
 @import 'tailwindcss';
 @plugin 'daisyui';
@@ -9,4 +8,12 @@
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
 }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
+#__svelte {
+  min-height: 100vh;
+}

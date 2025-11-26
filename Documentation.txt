@@ -4,3 +4,55 @@ Update 11/16/2025
     TODO
     - User Sign Up and Log in
     - Basic User Auth and Route Guarding
+
+Update 11/22/2025
+    - FRONTEND:
+        - Landing Page is Functional, Live Fetch is Okay
+            - Will add more tweaks, for now V1
+        - Login Page is Functional, Token is up and User Role Binding
+            - Will add more tweaks, for now V1
+        - Products Page still development
+            - Will add more for initial design
+    - FRONTEND TO DO:
+        - Finish Products Section, Display All Products
+        - Work with Filtering and Search
+        - Add add to cart Function
+        - Allow check out
+        - User Profile Setup
+        - User allow log out
+        - Work with adding admin view
+            - !!!!IMPORTANT!!!!
+                - Check item avail
+                - Check checkouts
+                - Some shit more lmao
+    - BACKEND TO DO:
+        - Guest Cart functionality
+        - Log out
+        - Add item GUI 
+    
+Update 11/23/2025
+    - FRONTEND:
+        - Products Page is Okay
+            - Expect more tweaks, current ver = V1
+        - Login Page
+            - Okay
+    - BACKEND:
+        - Token is Okay
+        - Route Guarding is Okay
+    - To Do:
+        - Enhance Products
+        - Add Admin Shits now
+        - Add User Profile Edit
+        - Most of Update 11/22/2025
+
+Update 11/24/2025
+    - FRONTEND:
+        - Product Slug Exists
+        - Engraving and Color Exists as well as calculations
+        - Initial Design, Expect more tweaks
+    - BACKEND:
+        - More, Can't Say ATM
+    To Do:
+        - Enhance Initial UIs
+        - Add Admin Shits T
+        - Pretty Much everything prior

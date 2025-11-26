@@ -51,7 +51,9 @@ export const AuthService = {
         .limit(1)
         .then(results => results[0]);
 
-        const secretkey = "helloworld"
+        if (!loginData) {
+            throw new Error('Invalid email or password');
+        }
 
         const payload = {
             id: loginData?.id,
@@ -59,7 +61,7 @@ export const AuthService = {
             email: loginData?.email
         }
 
-        const token = jwt.sign(payload, jwtSecret as string, { expiresIn: '1h' });
+        const token = jwt.sign(payload, jwtSecret as string, { expiresIn: '1min' });
 
         return { token, loginData};
     }

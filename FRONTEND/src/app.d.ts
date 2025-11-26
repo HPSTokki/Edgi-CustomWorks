@@ -7,9 +7,27 @@ declare global {
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+		
 
+		
+		interface Locals {
+			user: {
+				id: number | string;
+				email: string;
+				role: number | string;
+			} | null;
+			isAuthenticated: boolean;
+		}
+		
 		interface PageData {
-			products: ProductData[];
+			products?: ProductData[];
+			loginData?: LoginData;
+			signupData?: SignupData;
+			user?: {
+				id: number | string;
+				email: string;
+				role: number | string;
+			} | null;
 		}
 
 		interface ProductData {
@@ -31,6 +49,21 @@ declare global {
 			images: string[];
 			createdAt: Date;
 			updatedAt: Date;
+		}
+
+		interface LoginData {
+			id: number | string;
+			email: string;
+			password: string;
+			role: 0 | 1;
+			token: string;
+		}
+
+		interface SignupData {
+			id?: number | string;
+			email: string;
+			password: string;
+			role: 0 | 1;
 		}
 
 	}
