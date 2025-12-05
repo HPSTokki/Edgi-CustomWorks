@@ -4,6 +4,8 @@ import type { Request, Response } from 'express';
 import type { AccountSignUpData } from '../types/types.js';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import { CartService } from '../services/cart.services.ts';
+import { SessionService } from '../services/session.service.ts';
 
 const router = Router();
 const jwtSecret = process.env.JWT_SECRET
@@ -28,41 +30,69 @@ router.post('/signup', async (req: Request, res: Response) => {
 
 })
 
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { email, password, role, guestSessionId } = req.body;
+
     const result = await AuthService.logIn({
       email,
       password,
       role,
-    })
+    });
 
     if (!result.loginData) {
-      return res.status(401).json({ message: 'Invalid Email or Password'})
+      return res.status(401).json({ message: 'Invalid Email or Password'});
     }
 
     const { password: _, ...userWithoutPassword } = result.loginData;
 
+    // Handle cart session conversion if guestSessionId is provided
+    if (guestSessionId) {
+      try {
+        const cartService = new CartService();
+        await cartService.convertGuestToUserCart(guestSessionId, result.loginData.id);
+      } catch (cartError) {
+        console.error('Cart conversion failed:', cartError);
+        // Don't fail login if cart conversion fails
+      }
+    }
+
+    // Generate a new session ID for the authenticated user
+    const userSessionId = SessionService.generateSessionId();
+
     res.cookie('token', result.token, {
       httpOnly: true,
-      maxAge: 60 * 1000, // 1 minute
-      secure: process.env.NODE_ENV === 'production', // Add this
-      sameSite: 'lax', // Add this
-      path: '/', // Add this
-    })
+      maxAge: 60, // 1 minute
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+
+    // Also set a session cookie for cart purposes
+    res.cookie('sessionId', userSessionId, {
+      httpOnly: true,
+      maxAge: 60, // 1 minute
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
 
     res.json({
       id: userWithoutPassword.id,
       email: userWithoutPassword.email,
       role: userWithoutPassword.role,
       token: result.token,
+      sessionId: userSessionId, // Make sure this is returned
       expiresIn: '1min'
-    })
+    });
   } catch (error: any) {
     console.error('Error during login:', error);
+    if (error.message === 'Invalid email or password') {
+      return res.status(401).json({ message: error.message });
+    }
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
-})
+});
 
 router.post('/token-verify', async (req: Request, res: Response) => {
 

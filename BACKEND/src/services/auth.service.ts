@@ -4,6 +4,7 @@ import type { AccountSignUpData, UserProfileData, AccountLoginData } from '../ty
 import { and, eq } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import { CartService } from './cart.services.ts';
 
 const jwtSecret = process.env.JWT_SECRET
 
@@ -63,7 +64,21 @@ export const AuthService = {
 
         const token = jwt.sign(payload, jwtSecret as string, { expiresIn: '1min' });
 
-        return { token, loginData};
+        const cartService = new CartService();
+        try {
+            await cartService.ensureUserCart(loginData.id);
+
+            if(cartService) {
+                console.log('User cart ensured successfully');
+            } else {
+                console.log('Failed to ensure user cart');
+            }
+
+        } catch (error) {
+            console.error('Error ensuring user cart:', error);
+        }
+
+        return { token, loginData };
     }
 
 }

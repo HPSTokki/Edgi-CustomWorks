@@ -36,8 +36,9 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "admin@gmail.com",
-    "password": "TestPassword123"
+    "email": "test1@gmail.com",
+    "password": "TestPass123",
+    "guestSessionId": "1e768c01efc31c166b0f81070fc281daab4a275f22718b02d9532e8f34133c49"
 }
 
 ###
@@ -59,3 +60,61 @@ Content-Type: application/json
 POST http://localhost:3000/api/auth/admin-only
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
+
+### 1. Create Guest Cart
+
+GET http://localhost:3000/api/cartSessions/cart/guest
+Content-Type: application/json
+
+### 2. Add Item to Cart
+POST http://localhost:3000/api/cartSessions/cart/guest/items
+Content-Type: application/json
+
+{
+  "sessionId": "1e768c01efc31c166b0f81070fc281daab4a275f22718b02d9532e8f34133c49",
+  "productId": 3,
+  "quantity": 2,
+  "customizations": {
+    "color_finish": {
+      "value": "matte black",
+      "price": 50
+    }
+  }
+}
+
+### 3. Get Guest Cart
+GET http://localhost:3000/api/cartSessions/cart/guest?sessionId=df6e1f4b14906de7e0c12cd2f5cce335c4dfdead1cb593975228d3b21564fb0e
+Content-Type: application/json
+
+### 4. Get User Cart
+GET http://localhost:3000/api/cartSessions/cart?userId=2
+Content-Type: application/json
+
+### 5. Add Item to User Cart
+POST http://localhost:3000/api/cartSessions/cart/items
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "productId": 2,
+  "quantity": 1,
+  "customizations": null
+}
+
+### 7. Update Cart Item Quantity
+# Replace {itemId} with actual cart item ID
+PATCH http://localhost:3000/api/cartSessions/cart/items/2
+Content-Type: application/json
+
+{
+  "quantity": 1
+}
+
+### 8 Manual Cart Merge (if needed)
+POST http://localhost:3000/api/cartSessions/cart/merge
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "sessionId": "df6e1f4b14906de7e0c12cd2f5cce335c4dfdead1cb593975228d3b21564fb0e"
+}

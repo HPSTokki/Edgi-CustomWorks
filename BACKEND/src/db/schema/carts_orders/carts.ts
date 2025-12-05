@@ -4,8 +4,8 @@ import { product } from "../products.ts";
 
 export const cart = pgTable('carts', {
     id: serial('cart_id').primaryKey(),
-    userId: integer('user_id').notNull().references(() => user.id, { onDelete: 'cascade'}),
-    sessionId: varchar('session_id', { length: 255 }).notNull(),
+    userId: integer('user_id').references(() => user.id, { onDelete: 'cascade'}),
+    sessionId: varchar('session_id', { length: 255 }),
     createdAt: timestamp('created_at').notNull().defaultNow(),
     updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })

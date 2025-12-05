@@ -12,11 +12,12 @@ declare global {
 		
 		interface Locals {
 			user: {
-				id: number | string;
+				id: number;
 				email: string;
 				role: number | string;
 			} | null;
 			isAuthenticated: boolean;
+			sessionId: string
 		}
 		
 		interface PageData {
@@ -28,6 +29,7 @@ declare global {
 				email: string;
 				role: number | string;
 			} | null;
+			sessionId?: string;
 		}
 
 		interface ProductData {
@@ -57,6 +59,7 @@ declare global {
 			password: string;
 			role: 0 | 1;
 			token: string;
+			sessionId?: string;
 		}
 
 		interface SignupData {
@@ -64,6 +67,26 @@ declare global {
 			email: string;
 			password: string;
 			role: 0 | 1;
+		}
+
+		interface CartItem {
+		id: number;
+		quantity: number;
+		customizations: any;
+		productId: number;
+		productName: string;
+		productSlug: string;
+		categorySlug: string;
+		basePrice: number;
+		images: string[] | null;
+		unitPrice: number;
+		itemTotal: number;
+		}
+
+		interface CartData {
+		cartId?: number;
+		items: CartItem[];
+		subtotal: number;
 		}
 
 	}

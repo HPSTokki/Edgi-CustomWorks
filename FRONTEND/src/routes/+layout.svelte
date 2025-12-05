@@ -1,13 +1,16 @@
 <script lang="ts">
   import "../app.css";
-  import { page } from "$app/state";
+  import { page } from "$app/stores"; // ← Fix: Change from $app/state to $app/stores
+  import { onMount } from 'svelte';
+  import { cartActions } from '$lib/stores/cart';
+  import CartIcon from '../components/CartIcon.svelte';
+  import { browser } from '$app/environment';
 
   let searchValue = $state("");
   let isDropdownOpen = $state(false);
 
   async function getItem() {
-
-    function formatter(searchValue: string) : string {
+    function formatter(searchValue: string): string {
       let formattedOutput = searchValue.toLowerCase().replace(/ /, "-");
       return formattedOutput;
     }
@@ -20,17 +23,47 @@
     } else {
       alert("No data found")
     }
-
   }
 
   function clearSearch() {
     searchValue = "";
   }
 
-    $effect(() => {
-    console.log('Full page data:', page.data);
-    console.log('User data:', page.data.user);
+  $effect(() => {
+    console.log('Full page data:', $page.data); // ← Fix: Use $page instead of page.data
+    console.log('User data:', $page.data.user);
     console.log('Has token:', document.cookie.includes('token'));
+  });
+
+  onMount(async () => {
+    if (browser) {
+      // Ensure we have a sessionId in localStorage
+      let sessionId = localStorage.getItem('sessionId');
+      
+      if (!sessionId) {
+        try {
+          const response = await fetch('http://localhost:3000/api/cartSessions/cart/guest', { // ← Fix: Add full URL
+            method: 'GET'
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            sessionId = data.sessionId;
+            if (sessionId) { // ← Fix: Add null check
+              localStorage.setItem('sessionId', sessionId);
+              console.log('Initialized guest session:', sessionId);
+            }
+          }
+        } catch (error) {
+          console.error('Failed to initialize guest session:', error);
+        }
+      }
+
+      // If user is authenticated, store userId in localStorage
+      if ($page.data.user) {
+        localStorage.setItem('userId', $page.data.user.id.toString());
+      }
+    }
   });
 
   let { children } = $props();
@@ -70,13 +103,13 @@
           <ul class="menu menu-horizontal gap-2">
             <!-- Navbar Menu Content -->
             <li><a href="/products" class="hover:bg-red-600">Products</a></li>
-            <li><a href="/" class="hover:bg-red-600">Cart</a></li>
             <li><a href="/" class="hover:bg-red-600">Orders</a></li>
-            {#if page.data.user}
+            {#if $page.data.user} <!-- ← Fix: Use $page.data instead of page.data -->
               <li><a href="/profile" class="hover:bg-red-600">Profile</a></li>
               {:else}
               <li><a href="/user" class="hover:bg-red-600">Login</a></li>
             {/if}
+            <CartIcon />
           </ul>
         </div>
         <div class="dropdown md:dropdown-end" onfocusout={() => clearSearch()}>
@@ -127,8 +160,6 @@
           </div>
         </div>
       </div>
-
-      
     </div>
 
     <div class="drawer-side">
@@ -151,10 +182,8 @@
           </a>
         </li>
         <li class="hover:bg-red-400 transition-colors duration-300 rounded-xl">
-          <a class="flex h-12 items-center gap-4 rounded-lg px-4" href="/">
-            <span class="material-symbols-outlined text-[#333] fill"
-              >shopping_cart</span
-            >
+          <a class="flex h-12 items-center gap-4 rounded-lg px-4" href="/cart">
+            <CartIcon />
             <p class="text-base text-[#333] font-semibold">Cart</p>
           </a>
         </li>
@@ -166,7 +195,7 @@
             <p class="text-base text-[#333] font-semibold">Orders</p></a
           >
         </li>
-        {#if page.data.user}
+        {#if $page.data.user} <!-- ← Fix: Use $page.data instead of page.data -->
           <li class="hover:bg-red-400 transition-colors duration-300 rounded-xl">
           <a href="/profile" class="flex h-12 items-center gap-4 rounded-lg px-4"
             ><span class="material-symbols-outlined"> account_circle </span>

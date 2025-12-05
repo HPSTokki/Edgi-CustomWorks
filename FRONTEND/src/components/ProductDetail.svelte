@@ -1,4 +1,8 @@
 <script lang="ts">
+  import { page } from '$app/stores';
+  import { cartActions } from '$lib/stores/cart';
+  import { browser } from '$app/environment';
+
   let { product } = $props<{
     product: {
       productId: number;
@@ -53,28 +57,65 @@
     if (quantity > 1) quantity--;
   }
 
-  function addToCart() {
-    const cartItem = {
-      productId: product.productId,
-      quantity,
-      color: selectedColor,
-      engraving: engravingText,
-      unitPrice: product.basePrice,
-      colorPrice: selectedColor ? colorOptions.find(c => c.value === selectedColor)?.price || 0 : 0,
-      engravingPrice,
-      totalPrice: total
-    };
-    console.log('Add to cart:', cartItem);
+async function addToCart(): Promise<void> {
+    if (!browser) return;
+
+    try {
+      // Build customizations object based on selected options
+      const customizations: any = {};
+
+      // Add color finish customization if selected
+      if (product.hasColorFinish && selectedColor) {
+        const selectedColorOption = colorOptions.find(c => c.value === selectedColor);
+        if (selectedColorOption) {
+          customizations.color_finish = {
+            value: selectedColorOption.value,
+            price: selectedColorOption.price
+          };
+        }
+      }
+
+      // Add engraving customization if text is provided
+      if (product.hasEngraving && engravingText.trim()) {
+        customizations.engraving = {
+          type: 'text',
+          text: engravingText.trim(),
+          value: engravingText.trim(),
+          price: engravingPrice
+        };
+      }
+
+      // Get user info from page data
+      const user = $page.data.user;
+      const sessionId = browser ? localStorage.getItem('sessionId') : null;
+      const userId = user?.id;
+
+      await cartActions.addItemToCart(
+        product.productId,
+        quantity,
+        Object.keys(customizations).length > 0 ? customizations : undefined,
+        sessionId || undefined,
+        userId as number
+      );
+
+      // Optional: Show success message or redirect to cart
+      // You can add a toast notification here
+      console.log('Product added to cart!');
+
+    } catch (error) {
+      console.error('Failed to add product to cart:', error);
+      // Show error message to user
+    }
   }
 
-  function buyNow() {
-    console.log('Buy now:', { 
-      productId: product.productId, 
-      quantity,
-      color: selectedColor,
-      engraving: engravingText,
-      totalPrice: total
-    });
+  async function buyNow(): Promise<void> {
+    // First add to cart, then redirect to checkout
+    await addToCart();
+    
+    // Redirect to cart page
+    if (browser) {
+      window.location.href = '/cart';
+    }
   }
 </script>
 

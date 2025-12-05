@@ -5,6 +5,12 @@
   let { data } = $props();
 </script>
 
+<svelte:head>
+  <title>
+    {data.product ? data.product.name : 'Product Not Found'} - EdGi Custom Works
+  </title>
+</svelte:head>
+
 {#if data.product}
   <ProductDetail product={data.product} />
 {:else}

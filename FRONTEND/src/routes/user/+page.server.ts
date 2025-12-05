@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
-  default: async ({ request, cookies }) => {
+  default: async ({ request, cookies, url }) => {
     const formData = await request.formData();
     const email = formData.get('email');
     const password = formData.get('password');
@@ -15,6 +15,9 @@ export const actions: Actions = {
     }
     
     try {
+      // Get guest session ID from localStorage (passed via form)
+      const guestSessionId = formData.get('guestSessionId')?.toString();
+      
       const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
@@ -22,7 +25,8 @@ export const actions: Actions = {
         },
         body: JSON.stringify({
           email: email.toString(),
-          password: password.toString()
+          password: password.toString(),
+          guestSessionId: guestSessionId || undefined
         })
       });
       
@@ -38,8 +42,15 @@ export const actions: Actions = {
             maxAge: 60 // 1 minute
           });
         }
-        
-        throw redirect(303, '/');
+
+        // Return the login data including sessionId to the client
+        return {
+          success: true,
+          loginData: {
+            ...loginData,
+            // This will be available in the form data for the client to use
+          }
+        };
       } else {
         const errorData = await response.json();
         return {
@@ -48,11 +59,6 @@ export const actions: Actions = {
         };
       }
     } catch (error) {
-      // Check if it's a redirect by its properties
-      if (typeof error === 'object' && error !== null && 'status' in error && 'location' in error) {
-        throw error;
-      }
-      
       return {
         success: false,
         message: error instanceof Error ? error.message : 'An unknown error occurred'

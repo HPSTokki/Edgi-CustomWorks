@@ -1,6 +1,8 @@
 <script lang="ts">
   import ProductCardV2 from "../../components/ProductCardV2.svelte";
-  import { page } from "$app/stores";
+  import { cartActions } from '$lib/stores/cart';
+  import { page } from '$app/stores';
+  import { browser } from '$app/environment';
   import { onMount } from "svelte";
 
 
@@ -134,6 +136,30 @@ function sortProducts(products: any[], sortType: string) {
       fetchProducts();
     }, 300);
   });
+
+  async function quickAddToCart(product: Product): Promise<void> {
+    if (!browser) return;
+
+    try {
+      const user = $page.data.user;
+      const sessionId = browser ? localStorage.getItem('sessionId') : null;
+      const userId = user?.id;
+
+      await cartActions.addItemToCart(
+        product.productId,
+        1,
+        undefined,
+        sessionId || undefined,
+        userId as number | undefined
+      );
+
+      // Optional: Show toast notification
+      console.log(`${product.name} added to cart!`);
+    } catch (error) {
+      console.error('Failed to add product to cart:', error);
+    }
+  }
+
 </script>
 
 <svelte:head>
@@ -262,10 +288,24 @@ function sortProducts(products: any[], sortType: string) {
     {:else}
       <!-- Products Grid -->
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
-        {#each products as product (product.productId)}
-          <ProductCardV2 {product} />
-        {/each}
-      </div>
+  {#each products as product (product.productId)}
+    <div class="relative group">
+  <ProductCardV2 {product} />
+
+  <button 
+    onclick={() => quickAddToCart(product)}
+    class="absolute bottom-3 right-3 
+           bg-red-800 text-white p-2 rounded-full shadow-md 
+           opacity-0 group-hover:opacity-100 
+           translate-y-2 group-hover:translate-y-0
+           transition-all duration-200"
+  >
+    <span class="material-symbols-outlined text-base leading-none">add_shopping_cart</span>
+  </button>
+</div>
+
+  {/each}
+</div>
 
       <!-- Empty State -->
       {#if products.length === 0}

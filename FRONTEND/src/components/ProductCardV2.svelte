@@ -1,4 +1,9 @@
 <script lang="ts">
+  import { cartActions } from '$lib/stores/cart';
+  import { page } from '$app/stores';
+  import { browser } from '$app/environment';
+  import { goto } from '$app/navigation';
+
   let { product } = $props<{
     product: {
       productId: number;
@@ -9,13 +14,41 @@
       categoryName: string;
       stockQuantity: number;
       shortDescription: string;
+      createdAt: string;
+      hasColorFinish: boolean;
+      hasEngraving: boolean;
+      hasBarrelLength: boolean;
+      hasBarrelMaterialType: boolean;
     }
   }>();
+
+  async function quickAddToCart(): Promise<void> {
+    if (!browser) return;
+
+    try {
+      const user = $page.data.user;
+      const sessionId = browser ? localStorage.getItem('sessionId') : null;
+      const userId = user?.id;
+
+      await cartActions.addItemToCart(
+        product.productId,
+        1, // Default quantity
+        undefined, // No customizations for quick add
+        sessionId || undefined,
+        userId as number | undefined
+      );
+
+      // Show quick feedback
+      console.log('Product added to cart!');
+    } catch (error) {
+      console.error('Failed to add product to cart:', error);
+    }
+  }
 </script>
 
 <a href="/products/{product.slug}" class="block h-full">
   <div
-    class="bg-white dark:bg-zinc-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col relative w-full h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+    class="bg-white dark:bg-zinc-800 rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col relative w-full h-full hover:shadow-lg transition-shadow duration-300 cursor-pointer"
   >
     <!-- Product Image -->
     {#if product.images && product.images.length > 0}
@@ -73,20 +106,12 @@
     </div>
 
     <!-- Add to Cart Button - Make it a separate clickable element -->
-    <button
-      class="absolute bottom-2 right-2 bg-red-600 text-white h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shadow-md hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
-      disabled={product.stockQuantity === 0}
-      title={product.stockQuantity === 0 ? 'Out of stock' : 'Add to cart'}
-      onclick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        // Add to cart logic here
-        console.log('Add to cart:', product.productId);
-      }}
-    >
-      <span class="material-symbols-outlined text-lg sm:text-xl">
-        {product.stockQuantity === 0 ? 'remove_shopping_cart' : 'add_shopping_cart'}
-      </span>
-    </button>
+ <button 
+    onclick={() => goto('/products/' + product.slug)}
+    class="mt-2 w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
+    disabled={product.stockQuantity === 0}
+  >
+    {product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+  </button>
   </div>
 </a>
