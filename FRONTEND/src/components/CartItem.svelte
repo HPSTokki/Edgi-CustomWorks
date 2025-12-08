@@ -32,7 +32,7 @@
 
 </script>
 
-<div class="flex items-center gap-4 bg-white dark:bg-zinc-900 px-4 min-h-[72px] py-3 justify-between">
+<div class="flex items-center gap-4 bg-white dark:bg-zinc-900 px-4 min-h-[72px] py-3 justify-between rounded-lg">
   <div class="flex items-center gap-4 flex-1">
     <div 
       class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-16 shrink-0"

@@ -20,7 +20,7 @@ export interface CartItem {
 }
 
 export interface CartData {
-  cartId?: number;
+  cartId: number | null;
   items: CartItem[];
   subtotal: number;
 }

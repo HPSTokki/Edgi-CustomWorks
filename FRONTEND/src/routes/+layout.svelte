@@ -61,7 +61,7 @@
 
       // If user is authenticated, store userId in localStorage
       if ($page.data.user) {
-        localStorage.setItem('userId', $page.data.user.id.toString());
+        localStorage.setItem('userId', $page.data.user.user?.id.toString() || '');
       }
     }
   });
@@ -103,7 +103,7 @@
           <ul class="menu menu-horizontal gap-2">
             <!-- Navbar Menu Content -->
             <li><a href="/products" class="hover:bg-red-600">Products</a></li>
-            <li><a href="/" class="hover:bg-red-600">Orders</a></li>
+            <li><a href="/orders" class="hover:bg-red-600">Orders</a></li>
             {#if $page.data.user} <!-- ← Fix: Use $page.data instead of page.data -->
               <li><a href="/profile" class="hover:bg-red-600">Profile</a></li>
               {:else}
@@ -183,7 +183,6 @@
         </li>
         <li class="hover:bg-red-400 transition-colors duration-300 rounded-xl">
           <a class="flex h-12 items-center gap-4 rounded-lg px-4" href="/cart">
-            <CartIcon />
             <p class="text-base text-[#333] font-semibold">Cart</p>
           </a>
         </li>

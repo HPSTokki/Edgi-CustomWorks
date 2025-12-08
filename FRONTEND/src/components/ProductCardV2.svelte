@@ -35,7 +35,7 @@
         1, // Default quantity
         undefined, // No customizations for quick add
         sessionId || undefined,
-        userId as number | undefined
+        userId as number || undefined
       );
 
       // Show quick feedback

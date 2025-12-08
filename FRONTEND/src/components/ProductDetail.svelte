@@ -95,7 +95,7 @@ async function addToCart(): Promise<void> {
         quantity,
         Object.keys(customizations).length > 0 ? customizations : undefined,
         sessionId || undefined,
-        userId as number
+        userId as number || undefined
       );
 
       // Optional: Show success message or redirect to cart

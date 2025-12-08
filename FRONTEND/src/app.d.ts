@@ -19,16 +19,23 @@ declare global {
 			isAuthenticated: boolean;
 			sessionId: string
 		}
+
+		interface AuthResponse {
+		valid: boolean;
+		user: {
+			id: number | string;
+			email: string;
+			role: number | string;
+			// Add other user fields if needed
+			} | null;
+		message: string;
+		}
 		
 		interface PageData {
 			products?: ProductData[];
 			loginData?: LoginData;
 			signupData?: SignupData;
-			user?: {
-				id: number | string;
-				email: string;
-				role: number | string;
-			} | null;
+			user?: AuthResponse | null;
 			sessionId?: string;
 		}
 
