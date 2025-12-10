@@ -4,6 +4,7 @@ import productRouter from './product.router.ts';
 import authRouter from './auth.router.ts'
 import cartRouter from './cart.router.ts';
 import orderRouter from './order.routes.ts';
+import productAdminRouter from './admin/product.router.ts';
 
 const router = Router();
 
@@ -12,5 +13,6 @@ router.use('/products', productRouter);
 router.use('/auth', authRouter);
 router.use('/cartSessions', cartRouter);
 router.use('/orderRouting', orderRouter);
+router.use('/admin/orders', productAdminRouter);
 
 export default router;
