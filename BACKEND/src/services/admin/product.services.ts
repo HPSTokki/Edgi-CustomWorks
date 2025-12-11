@@ -270,7 +270,6 @@ export class AdminOrderService {
       shippedOrders: sql<number>`sum(case when ${Order.status} = 'shipped' then 1 else 0 end)`,
       deliveredOrders: sql<number>`sum(case when ${Order.status} = 'delivered' or ${Order.status} = 'completed' then 1 else 0 end)`,
       cancelledOrders: sql<number>`sum(case when ${Order.status} = 'cancelled' then 1 else 0 end)`,
-      // Add payment-related statuses
       paymentPendingOrders: sql<number>`sum(case when ${Order.status} IN ('pending_payment', 'awaiting_payment', 'payment_required') then 1 else 0 end)`,
       todayOrders: sql<number>`sum(case when ${Order.createdAt} >= ${today} and ${Order.createdAt} < ${tomorrow} then 1 else 0 end)`,
       todayRevenue: sql<string>`sum(case when ${Order.createdAt} >= ${today} and ${Order.createdAt} < ${tomorrow} then ${Order.total}::decimal else 0 end)`

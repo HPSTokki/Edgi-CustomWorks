@@ -64,6 +64,33 @@
   let showDeleteModal = false;
   let orderToDelete: string | null = null;
 
+  function formatStatus(status: string): string {
+    if (!status) return "Unknown";
+
+    const statusMap: Record<string, string> = {
+      pending: "Pending",
+      pending_payment: "Pending Payment",
+      awaiting_payment: "Awaiting Payment",
+      payment_required: "Payment Required",
+      processing: "Processing",
+      shipped: "Shipped",
+      delivered: "Delivered",
+      completed: "Completed",
+      cancelled: "Cancelled",
+      paid: "Paid",
+      refunded: "Refunded",
+    };
+
+    // Default: capitalize and replace underscores
+    return (
+      statusMap[status] ||
+      status
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    );
+  }
+
   // Fetch data
   async function fetchOrders() {
     loading = true;
@@ -190,7 +217,7 @@
     const num = typeof amount === "string" ? parseFloat(amount) : amount;
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "PHP",
     }).format(num);
   }
 
@@ -300,7 +327,7 @@
             </button>
             <button
               onclick={fetchOrders}
-              class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               <svg
                 class="-ml-1 mr-2 h-5 w-5"
@@ -565,7 +592,7 @@
           <div class="mt-6">
             <button
               onclick={resetFilters}
-              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Clear filters
             </button>
@@ -574,7 +601,7 @@
       </div>
     {:else}
       <!-- Orders Table -->
-      <div class="bg-white shadow overflow-hidden sm:rounded-md">
+      <div class="bg-white shadow sm:rounded-md">
         <ul class="divide-y divide-gray-200">
           {#each orders as order}
             <li>
@@ -585,7 +612,7 @@
                       <div>
                         <div class="flex items-center space-x-2">
                           <p
-                            class="text-sm font-medium text-indigo-600 truncate"
+                            class="text-sm font-medium text-slate-500 truncate"
                           >
                             <a
                               href="/admin/orders/{order.orderNumber}"
@@ -599,7 +626,7 @@
                               order.status
                             )}"
                           >
-                            {order.status}
+                            {formatStatus(order.status)}
                           </span>
                         </div>
                         <div class="mt-1">
@@ -651,18 +678,11 @@
                             order.orderNumber,
                             e.currentTarget.value
                           )}
-                        class="block w-full pl-3 pr-8 py-1 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                        class="block w-full pl-3 pr-8 py-1 text-slate-700 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                       >
-  <option value="pending">Pending</option>
-  <option value="pending_payment">Pending Payment</option>
-  <option value="awaiting_payment">Awaiting Payment</option>
-  <option value="payment_required">Payment Required</option>
-  <option value="processing">Processing</option>
-  <option value="shipped">Shipped</option>
-  <option value="delivered">Delivered</option>
-  <option value="completed">Completed</option>
-  <option value="cancelled">Cancelled</option>
-  <option value="paid">Paid</option>
+                        {#each statusOptions as option}
+                          <option value={option}>{formatStatus(option)}</option>
+                        {/each}
                       </select>
                     </div>
 
@@ -780,7 +800,7 @@
                         onclick={() => goToPage(pageNum)}
                         class={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
                           filters.page === pageNum
-                            ? "z-10 bg-indigo-50 border-indigo-500 text-indigo-600"
+                            ? "z-10 bg-indigo-50 border-indigo-500 text-slate-800 hover:bg-indigo-50"
                             : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
                         }`}
                       >
@@ -829,10 +849,11 @@
       <div
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
         onclick={() => (showFilterModal = false)}
+        aria-hidden="true"
       ></div>
 
       <!-- Modal container -->
-      <div class="flex min-h-screen items-center justify-center p-4">
+      <div class="flex min-h-screen items-center justify-center p-4" role="dialog">
         <!-- Modal content - stop propagation -->
         <div
           class="relative bg-white rounded-lg shadow-xl w-full max-w-lg"
@@ -868,18 +889,16 @@
             <div class="space-y-4">
               <!-- Status Filter -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
+                <label class="block text-sm font-medium text-slate-700 mb-1">
                   Status
                 </label>
                 <select
                   bind:value={filters.status}
-                  class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                  class="block w-full pl-3 pr-10 py-2 text-slate-700 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 >
                   {#each statusOptions as option}
                     <option value={option}>
-                      {option === "all"
-                        ? "All Statuses"
-                        : option.charAt(0).toUpperCase() + option.slice(1)}
+                      {option === "all" ? "All Statuses" : formatStatus(option)}
                     </option>
                   {/each}
                 </select>
@@ -892,7 +911,7 @@
                 </label>
                 <select
                   bind:value={filters.paymentStatus}
-                  class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                  class="block w-full pl-3 pr-10 py-2 text-slate-700 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 >
                   {#each paymentStatusOptions as option}
                     <option value={option}>
@@ -911,7 +930,7 @@
                 </label>
                 <select
                   bind:value={filters.paymentMethod}
-                  class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                  class="block w-full pl-3 pr-10 py-2 text-slate-700 border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
                 >
                   {#each paymentMethodOptions as option}
                     <option value={option}>
@@ -938,7 +957,7 @@
                   <input
                     type="date"
                     bind:value={filters.startDate}
-                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="block w-full border-gray-300 text-slate-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -948,7 +967,7 @@
                   <input
                     type="date"
                     bind:value={filters.endDate}
-                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="block w-full border-gray-300 text-slate-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
                 </div>
               </div>
@@ -972,7 +991,7 @@
               <button
                 type="button"
                 onclick={applyFilters}
-                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Apply Filters
               </button>
@@ -983,7 +1002,6 @@
     </div>
   {/if}
 
-  <!-- Delete Confirmation Modal -->
   <!-- Delete Confirmation Modal -->
   {#if showDeleteModal}
     <div class="fixed inset-0 z-50 overflow-y-auto">
@@ -1006,7 +1024,7 @@
                 class="shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100"
               >
                 <svg
-                  class="h-6 w-6 text-red-600"
+                  class="h-6 w-6 tered-600bg-red-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -1047,7 +1065,7 @@
               <button
                 type="button"
                 onclick={deleteOrder}
-                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white red-600bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 Delete
               </button>

@@ -30,11 +30,15 @@
     <p class="mt-2 text-sm text-gray-300">
       Customize. Engrave. Add your own touch.
     </p>
-    <button
+    <a href="/products">
+      
+      <button
       class="mt-6 w-max rounded-full bg-red-300 px-8 py-3 text-sm font-semibold text-[#333] shadow-md transition hover:bg-red-600"
     >
       Shop
     </button>
+    
+    </a>
   </div>
 </section>
 
