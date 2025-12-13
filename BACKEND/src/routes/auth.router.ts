@@ -185,5 +185,64 @@ router.post('/admin-only', async (req: Request, res: Response) => {
 
 })
 
+router.post('/logout', async (req: Request, res: Response) => {
+    try {
+        const token = req.cookies?.token || 
+                     req.headers['authorization']?.replace('Bearer ', '') || 
+                     req.body?.token;
+
+        // Get user ID from token if available
+        let userId: number | null = null;
+        
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, jwtSecret as string) as { id: number; role: number; email: string; };
+                userId = decoded.id;
+                
+                // Optionally invalidate the token
+                await AuthService.invalidateToken(token);
+            } catch (error) {
+                // Token might be expired, but we still proceed with logout
+                console.log('Token verification failed during logout (might be expired)');
+            }
+        }
+
+        // Clear all auth cookies
+        const cookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax' as const,
+            path: '/',
+        };
+
+        // Clear token cookie
+        res.clearCookie('token', cookieOptions);
+        
+        // Clear sessionId cookie (for cart)
+        res.clearCookie('sessionId', cookieOptions);
+        
+        // Clear any other potential auth cookies
+        res.clearCookie('user_session', cookieOptions);
+        res.clearCookie('admin_session', cookieOptions);
+        res.clearCookie('auth_token', cookieOptions);
+
+        // If we have a user ID, log the logout
+        if (userId) {
+            await AuthService.logout(userId);
+        }
+
+        res.json({
+            success: true,
+            message: 'Logged out successfully'
+        });
+    } catch (error: any) {
+        console.error('Error during logout:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error during logout'
+        });
+    }
+});
+
 
 export default router;

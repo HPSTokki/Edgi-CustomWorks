@@ -6,6 +6,8 @@
   import CheckoutStep2Shipping from './components/CheckoutStep2Shipping.svelte';
   import CheckoutStep3Shipping from './components/CheckoutStep3Shipping.svelte';
   import { browser } from '$app/environment';
+  
+  // Import types from app namespace
 
   // Step management
   const STEPS = {
@@ -82,8 +84,7 @@
 
   // Helper function to get current user
   function getCurrentUser() {
-    // Use the AuthResponse type from global App namespace
-    const authData = $page.data?.user as App.AuthResponse | undefined;
+    const authData = $page.data?.user;
     
     if (!authData || !authData.valid || !authData.user) {
       return null;
@@ -107,7 +108,7 @@
   <div class="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
     <div class="text-center">
       <span class="material-symbols-outlined text-gray-400 text-6xl mb-4">shopping_cart</span>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Your cart is empty</h2>
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Your cart is empty</h2>
       <p class="text-gray-600 dark:text-gray-400 mb-4">Add items to your cart before checking out</p>
       <a href="/products" class="text-primary hover:text-primary/80 font-medium">Browse Products</a>
     </div>
@@ -126,14 +127,14 @@
               prevStep();
             }
           }}
-          class="flex size-12 shrink-0 items-center justify-center text-[#181111]"
+          class="flex size-12 shrink-0 items-center justify-center text-[#181111] dark:text-white"
         >
           <span class="material-symbols-outlined text-2xl">
             {currentStep === STEPS.SHIPPING ? 'arrow_back_ios_new' : 'arrow_back'}
           </span>
         </button>
         
-        <h2 class="text-[#181111] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">
+        <h2 class="text-[#181111] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">
           {#if currentStep === STEPS.SHIPPING}
             Checkout
           {:else if currentStep === STEPS.PAYMENT}
@@ -154,7 +155,7 @@
               class="h-2 w-full rounded-full transition-colors {currentStep >= step ? 'bg-primary' : 'bg-[#e6dbdc] dark:bg-white/20'}"
             ></div>
             <p 
-              class="text-xs font-medium transition-colors {currentStep >= step ? 'text-primary' : 'text-[#896163]/50'}"
+              class="text-xs font-medium transition-colors {currentStep >= step ? 'text-primary' : 'text-[#896163] dark:text-white/50'}"
             >
               {#if step === STEPS.SHIPPING}
                 Shipping

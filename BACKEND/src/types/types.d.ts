@@ -95,6 +95,19 @@ export interface UserProfileData {
 
     firstName?: string;
     lastName?: string;
+    
+}
 
+export interface UpdateUserProfileData {
 
+    accountId?: number;
+    firstName?: string;
+    lastName?: string;
+    age?: number;
+    phoneNumber?: string;
+    street?: string;
+    city?: string;
+    province?: string;
+    zipCode?: string;
+    
 }

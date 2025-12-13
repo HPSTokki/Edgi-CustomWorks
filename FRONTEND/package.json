@@ -25,6 +25,10 @@
 		"vite": "^7.1.7"
 	},
 	"dependencies": {
+		"@carbon/charts-svelte": "^1.22.18",
+		"carbon-components-svelte": "^0.95.2",
+		"chart.js": "^4.5.1",
+		"d3": "^7.9.0",
 		"dotenv": "^17.2.3",
 		"jsonwebtoken": "^9.0.2"
 	}

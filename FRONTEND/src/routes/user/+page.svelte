@@ -2,10 +2,12 @@
   import { enhance } from '$app/forms';
   import { page } from '$app/stores';
   import { browser } from '$app/environment';
+  import { goto, invalidateAll } from '$app/navigation';
 
   let email = '';
   let password = '';
   let isLoading = false;
+  let showPassword = false;
 
   // Get guest session ID from localStorage for cart merging
   let guestSessionId = '';
@@ -16,19 +18,32 @@
 
   // Handle form result
   $: if ($page.form?.success) {
-    // Store sessionId and userId in localStorage
     if (browser && $page.form.loginData) {
       localStorage.setItem('sessionId', $page.form.loginData.sessionId);
       localStorage.setItem('userId', $page.form.loginData.id.toString());
       
-      // Redirect to home page after successful login
-      window.location.href = '/';
+      // CRITICAL: Invalidate all data to force reload
+      invalidateAll().then(() => {
+        // Now navigate with fresh data
+        if ($page.form?.loginData.role === 1) {
+          goto('/admin');
+        } else {
+          goto('/products');
+        }
+      });
     }
+  }
+
+  // Toggle password visibility
+  function togglePassword() {
+    showPassword = !showPassword;
   }
 </script>
 
 <svelte:head>
   <title>Login - EdGi Custom Works</title>
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </svelte:head>
 
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -54,32 +69,52 @@
     }} class="mt-8 space-y-6">
       <input type="hidden" name="guestSessionId" value={guestSessionId} />
       
-      <div class="rounded-md shadow-sm -space-y-px">
-        <div>
-          <label for="email" class="sr-only">Email address</label>
+      <div class="space-y-6">
+        <div class="space-y-2">
+          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Email address
+          </label>
           <input
             id="email"
             name="email"
             type="email"
             autocomplete="email"
             required
-            class="relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-800"
-            placeholder="Email address"
+            class="relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm bg-white dark:bg-gray-800"
+            placeholder="you@example.com"
             bind:value={email}
           />
         </div>
-        <div>
-          <label for="password" class="sr-only">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autocomplete="current-password"
-            required
-            class="relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-b-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-800"
-            placeholder="Password"
-            bind:value={password}
-          />
+        
+        <div class="space-y-2">
+          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Password
+          </label>
+          <div class="relative">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              autocomplete="current-password"
+              required
+              class="relative block w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 sm:text-sm bg-white dark:bg-gray-800"
+              placeholder="••••••••"
+              bind:value={password}
+            />
+            <button
+              type="button"
+              on:click={togglePassword}
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+              tabindex="-1"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+            >
+              {#if showPassword}
+                <span class="material-icons text-xl">visibility_off</span>
+              {:else}
+                <span class="material-icons text-xl">visibility</span>
+              {/if}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -96,6 +131,11 @@
           {/if}
           Sign in
         </button>
+        Don't have an account?
+        <div class="text-sm mt-2 text-center">
+          <a href="/user/signup" class="font-medium text-red-600 hover:text-red-500">
+            Register here
+          </a>
       </div>
     </form>
   </div>

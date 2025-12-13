@@ -144,7 +144,7 @@ router.post('/orders/:orderNumber/payment', async (req, res) => {
     await orderService.updatePaymentStatus(orderNumber, 'paid');
     
     // Update order status from awaiting_payment to processing
-    if (order.status === 'awaiting_payment' || order.status === 'payment_required') {
+    if (order.status === 'pending_payment' || order.status === 'payment_required') {
       await orderService.updateOrderStatus(orderNumber, 'processing');
     }
 
@@ -168,7 +168,7 @@ router.post('/orders/:orderNumber/payment', async (req, res) => {
       order: {
         ...order,
         paymentStatus: 'paid',
-        status: order.status === 'awaiting_payment' ? 'processing' : order.status
+        status: order.status === 'pending_payment' ? 'processing' : order.status
       }
     });
   } catch (error) {

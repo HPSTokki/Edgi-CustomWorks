@@ -11,6 +11,8 @@ export const CategoryService = {
         .from(ProductCategory)
         .orderBy(ProductCategory.name);
 
+        
+
     },
 
     async create(categoryData: { name: string; slug: string }) {

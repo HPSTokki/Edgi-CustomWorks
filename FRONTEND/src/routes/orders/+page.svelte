@@ -89,26 +89,26 @@
   };
 
   const getStatusColor = (status: string | null) => {
-    if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400';
+    if (!status) return 'bg-gray-100 text-gray-800';
     
     switch (status.toLowerCase()) {
       case 'completed':
       case 'delivered':
       case 'paid':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+        return 'bg-green-100 text-green-800';
       case 'pending':
       case 'processing':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+        return 'bg-yellow-100 text-yellow-900';
       case 'shipped':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+        return 'bg-blue-100 text-blue-800';
       case 'cancelled':
       case 'refunded':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+        return 'bg-red-100 text-red-800';
       case 'awaiting_payment':
       case 'payment_required':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-400';
+        return 'bg-orange-100 text-orange-800';
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400';
+        return 'bg-gray-100 text-gray-800';
     }
   };
 

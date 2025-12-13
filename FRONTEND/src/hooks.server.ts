@@ -59,6 +59,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname.startsWith('/admin') && (!isAuthenticated || user?.role !== 1)) {
     throw redirect(302, '/unauthorized');
   }
+  
 
   const response = await resolve(event);
   return response;

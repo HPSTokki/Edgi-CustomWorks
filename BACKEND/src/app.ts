@@ -13,13 +13,16 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.resolve();
 
+const corsOptions = {
+  origin: ['http://localhost:5173', 'http://localhost:4173', 'http://localhost:3000'], // Your SvelteKit dev and build URLs
+  credentials: true, // This is crucial for cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cookie', 'Set-Cookie'],
+  exposedHeaders: ['Set-Cookie']
+};
 
 app.use(express.json());
-app.use(cors())
-app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:4173'], // Your SvelteKit URLs
-    credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: true }));
 

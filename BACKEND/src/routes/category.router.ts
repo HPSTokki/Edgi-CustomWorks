@@ -8,6 +8,7 @@ router.get('/', async (req: Request, res: Response) => {
 
     try {
         const allCategories = await CategoryService.getAll();
+        console.log('Fetched categories:', allCategories);
         res.json(allCategories);
     } catch (error) {
         console.error('Error fetching categories:', error);

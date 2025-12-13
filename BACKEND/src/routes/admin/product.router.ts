@@ -203,4 +203,8 @@ router.delete('/:orderNumber', async (req: Request, res: Response) => {
   }
 });
 
+// Product Routes
+
+
+
 export default router;

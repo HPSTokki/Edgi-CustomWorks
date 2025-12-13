@@ -79,6 +79,32 @@ export const AuthService = {
         }
 
         return { token, loginData };
+    },
+
+
+    async logout(userId: number): Promise<boolean> {
+        try {
+            // You might want to implement token blacklisting here
+            // For now, we'll just return success as token clearing is handled by client
+            console.log(`User ${userId} logged out`);
+            return true;
+        } catch (error) {
+            console.error('Error during logout service:', error);
+            return false;
+        }
+    },
+
+    // Optional: Add token blacklisting if needed
+    async invalidateToken(token: string): Promise<boolean> {
+        try {
+            // Add token to blacklist (you'll need a database table for this)
+            // For now, just log it
+            console.log(`Token invalidated: ${token.substring(0, 20)}...`);
+            return true;
+        } catch (error) {
+            console.error('Error invalidating token:', error);
+            return false;
+        }
     }
 
 }

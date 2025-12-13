@@ -1,15 +1,20 @@
 <script lang="ts">
   import FeaturedComments from "../components/FeaturedComments.svelte";
+  import Chatbot from "../components/chatbot/Chatbot.svelte";
+  
 
 
   import ProductCard from "../components/ProductCard.svelte";
   import type { PageLoad } from "./$types";
+  import { page } from "$app/state";
 
   let { data } = $props<{ data: PageLoad }>(); 
 
   let { products } = $derived(data as any);
 
   let featComments: number = 4;
+
+  const userId = page.data.user?.user?.id || null;
 
 </script>
 
@@ -40,6 +45,7 @@
     
     </a>
   </div>
+  
 </section>
 
 <section class="h-auto text-white p-5 gap-2">
@@ -62,6 +68,7 @@
   {/each}
 </div>
 </section>
+
 
 
 <!-- Featured Comments -->

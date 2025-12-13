@@ -1,7 +1,8 @@
 import { db } from "../../db.ts";
-import { eq, and } from 'drizzle-orm';
+import { eq, and, ilike } from 'drizzle-orm';
 import { Order, OrderItems, Product } from "../../db/index.ts";
 import { like, sql, desc, or } from "drizzle-orm";
+import { product } from "../../db/schema/products.ts";
 
 export interface AdminOrderItem {
   id: number;
@@ -57,6 +58,47 @@ export interface OrderStats {
   cancelledOrders: number;
   todayOrders: number;
   todayRevenue: number;
+}
+
+export interface ProductData {
+  id?: number;
+  categoryId: number;
+  name: string;
+  slug: string;
+  description: string;
+  shortDescription: string;
+  basePrice: number;
+  stockQuantity: number;
+  isActive: boolean;
+  hasColorFinish: boolean;
+  hasEngraving: boolean;
+  hasBarrelMaterialType: boolean;
+  hasBarrelLength: boolean;
+  images?: string[];
+}
+
+export interface ProductFilters {
+  categoryId?: number | undefined;
+  search?: string | undefined;
+  isActive?: boolean | undefined;
+  hasColorFinish?: boolean | undefined;
+  hasEngraving?: boolean | undefined;
+  hasBarrelMaterialType?: boolean | undefined;
+  hasBarrelLength?: boolean | undefined;
+  minPrice?: number | undefined;
+  maxPrice?: number | undefined;
+  page?: number | undefined;
+  limit?: number | undefined;
+}
+
+export interface ProductStats {
+  totalProducts: number;
+  activeProducts: number;
+  inactiveProducts: number;
+  outOfStockProducts: number;
+  lowStockProducts: number;
+  averagePrice: number;
+  totalValue: number;
 }
 
 export class AdminOrderService {
